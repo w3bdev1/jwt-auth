@@ -18,7 +18,9 @@ app.use(express.json());
 app.set("view engine", "ejs");
 
 // connect db
-const dbURI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWD}@mongo.jynjm.mongodb.net/${process.env.MONGO_DB}`;
+// const dbURI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWD}@mongo.jynjm.mongodb.net/${process.env.MONGO_DB}`;
+
+const dbURI = `mongodb://localhost:27017/auth`
 
 mongoose
   .connect(dbURI)
