@@ -5,6 +5,15 @@ const jwt = require("jsonwebtoken");
 const handleErrors = (err) => {
   let errors = { email: "", password: "" };
 
+  // Login errors
+  if (err.message === "Incorrect email") {
+    errors.email = "Email is not registered";
+  }
+
+  if (err.message === "Incorrect password") {
+    errors.password = "Password is incorrect";
+  }
+
   // Duplicate email
   if (err.code === 11000) {
     errors.email = "Email is already registered";
@@ -49,8 +58,15 @@ module.exports.signup_post = async (req, res) => {
   }
 };
 
-module.exports.login_post = (req, res) => {
+module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
-  res.send("User Login");
+  try {
+    const user = await User.login(email, password);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: user._id });
+  } catch (err) {
+    const errors = handleErrors(err);
+    res.status(400).send({ errors });
+  }
 };
