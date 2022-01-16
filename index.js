@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
+const requireAuth = require("./middleware/authMiddleware");
 
 // environment variables
 dotenv.config();
@@ -34,5 +35,5 @@ mongoose
 
 // Routes
 app.get("/", (req, res) => res.render("home"));
-app.get("/post", (req, res) => res.render("post"));
+app.get("/write", requireAuth, (req, res) => res.render("write"));
 app.use(authRoutes);
